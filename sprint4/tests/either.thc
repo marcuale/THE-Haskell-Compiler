@@ -1,0 +1,15 @@
+-- Expected: 10
+
+data Either a b = Left a | Right b;
+
+id :: a -> a;
+id x = x;
+
+main :: Int;
+main = left id (Left 10);
+
+left :: (b -> a) -> Either a b -> a;
+left f e = case e of {
+    Left l -> l;
+    Right r -> f r;
+};

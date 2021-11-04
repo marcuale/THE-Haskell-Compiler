@@ -1,0 +1,28 @@
+-- Expected: 2
+
+data List a = Empty | Node a (List a);
+data Maybe a = Just a | Nothing;
+data MaybeT m a = MaybeT (m (Maybe a));
+
+(:) = Node;
+
+main :: Int;
+main = fromJust (head (fromMaybeT (MaybeT ((Just 2) : Empty))));
+
+head :: List a -> a;
+head l = case l of {
+    Node h _ -> h;
+};
+
+fromJust :: Maybe a -> a;
+fromJust m = case m of {
+    Just x -> x;
+};
+    
+
+fromMaybeT :: MaybeT m a -> m (Maybe a);
+fromMaybeT m = case m of {
+    MaybeT a -> a;
+};
+
+

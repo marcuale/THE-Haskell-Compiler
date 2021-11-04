@@ -1,0 +1,13 @@
+-- this file utilizes most of the syntaxes that are covered
+-- the only ones not used are the various infix levels but 
+-- most of those are still undefined
+
+add :: Int -> Int;
+add x y = x + y;
+
+add1 :: Int -> Int;
+add1 = add 1;
+
+main :: Int;
+main = add1 2;
+

@@ -1,0 +1,16 @@
+-- Expected: 100
+
+data Maybe a = Nothing | Just a;
+
+main :: Int;
+main = fromJustJust (Just (Just 100));
+
+fromJustJust :: Maybe (Maybe a) -> a;
+fromJustJust a = case a of {
+    Nothing -> 0;
+    Just b -> case b of {
+        Nothing -> 1;
+        Just c -> c;
+    };
+};
+

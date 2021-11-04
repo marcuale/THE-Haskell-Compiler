@@ -1,0 +1,305 @@
+- constr:
+    args:
+    - name: a
+      node: variable
+    constructor:
+      name: List
+      node: type_constr
+    node: type
+  constructors:
+  - args:
+    - args:
+      - args: []
+        constructor:
+          name: a
+          node: type_constr
+        node: type
+      constructor:
+        name: List
+        node: type_constr
+      node: type
+    - name: a
+      node: type_constr
+    constructor:
+      id: Node
+      node: constructor
+    node: constrdef
+  - args: []
+    constructor:
+      id: Empty
+      node: constructor
+    node: constrdef
+  node: data
+- constr:
+    args:
+    - name: a
+      node: variable
+    constructor:
+      name: Maybe
+      node: type_constr
+    node: type
+  constructors:
+  - args: []
+    constructor:
+      id: Nothing
+      node: constructor
+    node: constrdef
+  - args:
+    - name: a
+      node: type_constr
+    constructor:
+      id: Just
+      node: constructor
+    node: constrdef
+  node: data
+- args: []
+  body:
+    name: Node
+    node: variable
+  name:
+    name: ':'
+    node: variable
+  node: funcdef
+  type:
+    args:
+    - name: a
+      node: type_constr
+    - args:
+      - args:
+        - args: []
+          constructor:
+            name: a
+            node: type_constr
+          node: type
+        constructor:
+          name: List
+          node: type_constr
+        node: type
+      - args:
+        - args: []
+          constructor:
+            name: a
+            node: type_constr
+          node: type
+        constructor:
+          name: List
+          node: type_constr
+        node: type
+      constructor:
+        name: ->
+        node: type_constr
+      node: type
+    constructor:
+      name: ->
+      node: type_constr
+    node: type
+- args:
+  - name: x
+    node: variable
+  body:
+    arg:
+      name: x
+      node: variable
+    func:
+      arg:
+        name: x
+        node: variable
+      func:
+        name: mult
+        node: variable
+      node: funcapp
+    node: funcapp
+  name:
+    name: square
+    node: variable
+  node: funcdef
+  type:
+    args:
+    - name: Int
+      node: type_constr
+    - name: Int
+      node: type_constr
+    constructor:
+      name: ->
+      node: type_constr
+    node: type
+- args: []
+  body:
+    arg: 1
+    func:
+      arg:
+        arg: 1
+        func:
+          arg: 1
+          func:
+            name: +
+            node: variable
+          node: funcapp
+        node: funcapp
+      func:
+        name: +
+        node: variable
+      node: funcapp
+    node: funcapp
+  name:
+    name: three
+    node: variable
+  node: funcdef
+  type:
+    name: Int
+    node: type_constr
+- args: []
+  body:
+    arg:
+      arg:
+        arg:
+          name: Empty
+          node: variable
+        func:
+          arg: 2
+          func:
+            name: ':'
+            node: variable
+          node: funcapp
+        node: funcapp
+      func:
+        name: len
+        node: variable
+      node: funcapp
+    func:
+      arg:
+        arg:
+          arg:
+            arg:
+              name: Empty
+              node: variable
+            func:
+              arg: 2
+              func:
+                name: ':'
+                node: variable
+              node: funcapp
+            node: funcapp
+          func:
+            name: head
+            node: variable
+          node: funcapp
+        func:
+          name: square
+          node: variable
+        node: funcapp
+      func:
+        name: +
+        node: variable
+      node: funcapp
+    node: funcapp
+  name:
+    name: main
+    node: variable
+  node: funcdef
+  type:
+    name: Int
+    node: type_constr
+- args:
+  - name: l
+    node: variable
+  body:
+    cases:
+    - expr:
+        arg:
+          arg:
+            name: ls
+            node: variable
+          func:
+            name: len
+            node: variable
+          node: funcapp
+        func:
+          arg: 1
+          func:
+            name: add
+            node: variable
+          node: funcapp
+        node: funcapp
+      node: case_statement
+    - expr: 0
+      node: case_statement
+    expr:
+      name: l
+      node: variable
+    node: case
+  name:
+    name: len
+    node: variable
+  node: funcdef
+  type:
+    args:
+    - args:
+      - args: []
+        constructor:
+          name: a
+          node: type_constr
+        node: type
+      constructor:
+        name: List
+        node: type_constr
+      node: type
+    - name: Int
+      node: type_constr
+    constructor:
+      name: ->
+      node: type_constr
+    node: type
+- args:
+  - name: a
+    node: variable
+  body:
+    cases:
+    - expr:
+        arg:
+          name: a
+          node: variable
+        func:
+          name: Just
+          node: variable
+        node: funcapp
+      node: case_statement
+    - expr:
+        name: Nothing
+        node: variable
+      node: case_statement
+    expr:
+      name: a
+      node: variable
+    node: case
+  name:
+    name: head
+    node: variable
+  node: funcdef
+  type:
+    args:
+    - args:
+      - args: []
+        constructor:
+          name: a
+          node: type_constr
+        node: type
+      constructor:
+        name: List
+        node: type_constr
+      node: type
+    - args:
+      - args: []
+        constructor:
+          name: a
+          node: type_constr
+        node: type
+      constructor:
+        name: Maybe
+        node: type_constr
+      node: type
+    constructor:
+      name: ->
+      node: type_constr
+    node: type
+None

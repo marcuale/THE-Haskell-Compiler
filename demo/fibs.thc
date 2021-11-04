@@ -1,0 +1,37 @@
+data List a = Empty | Node a (List a);
+
+(:) :: a -> List a -> List a;
+(:) = Node;
+
+zipWith :: (a -> b -> c) -> List a -> List b -> List c;
+zipWith f la lb = case la of {
+    Empty -> Empty;
+    Node a as -> case lb of {
+        Empty -> Empty;
+        Node b bs -> Node (f a b) (zipWith f as bs);
+    };
+};
+
+add :: Int -> Int -> Int;
+add x y = x + y;
+
+tail :: List a -> List a;
+tail l = case l of {
+    Node _ t -> t;
+};
+
+unsafePrintAll :: List Int -> Int;
+unsafePrintAll l = case l of {
+    Empty -> 0;
+    Node h t -> seq (unsafePrint h) unsafePrintAll t;
+};
+
+
+-- *** BELOW IS THE IMPORTANT STUFF ***
+-- *** ABOVE IS BOILERPLATE THAT SHOULD BE IN STDLIB **
+
+fibs :: List Int;
+fibs = 0 : (1 : (zipWith add fibs (tail fibs)));
+
+main :: Int;
+main = unsafePrintAll fibs;

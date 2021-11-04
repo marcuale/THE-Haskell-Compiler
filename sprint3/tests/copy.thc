@@ -1,0 +1,24 @@
+-- Expected: 10
+
+data List a = Empty | Node a (List a);
+
+(:) :: a -> List a -> List a;
+(:) = Node; -- oh god i hope we can make this work please oh god
+
+add :: Int -> Int -> Int;
+add x y = x + y;
+
+add1 :: Int -> Int;
+add1 = add 1;
+
+main :: Int;
+main = fold add 0 (repeat (2 + 3));
+
+repeat :: Int -> List Int;
+repeat x = x : (x : Empty);
+
+fold :: (a->b->b) -> b -> List a -> b;
+fold f s l = case l of {
+    Empty -> s;
+    Node a ls -> f a (fold f s ls);
+};

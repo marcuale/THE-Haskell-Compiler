@@ -1,0 +1,18 @@
+- args: []
+  body:
+    arg: 1
+    func:
+      arg: 1
+      func:
+        name: +
+        node: variable
+      node: funcapp
+    node: funcapp
+  name:
+    name: two
+    node: variable
+  node: funcdef
+  type:
+    name: Int
+    node: type_constr
+None

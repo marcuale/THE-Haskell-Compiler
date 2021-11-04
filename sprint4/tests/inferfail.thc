@@ -1,0 +1,10 @@
+-- Expected: Type error
+
+data List a = Empty | Node a (List a);
+
+(:) = Node; -- oh god i hope we can make this work please oh god
+
+add x y = x + y;
+
+main = add 0 Empty;
+

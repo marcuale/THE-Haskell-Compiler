@@ -1,0 +1,18 @@
+data Maybe a = Nothing | Just a;
+
+add1 :: Int -> Int;
+add1 = add 1;
+
+main :: Int;
+main = fromJust (map add1 (Just 3));
+
+fromJust :: Maybe a -> a;
+fromJust a = case a of {
+    Just a -> a;
+};
+
+map :: (a -> b) -> Maybe a -> Maybe b;
+map f l = case l of {
+    Nothing -> Nothing;
+    Just a -> Just (f a);
+};

@@ -1,0 +1,208 @@
+program : declaration_list
+
+declaration_list : declaration SEMICOLON
+                 | declaration SEMICOLON declaration_list
+                 
+identifier_list : identifier
+                | identifier identifier_list
+
+lower_identifier_list : ID_LOWER
+                      | ID_LOWER identifier_list
+
+typesum : constrdef
+        | constrdef BAR typesum
+
+type_list : type_atom
+          | type_atom type_list
+
+case_list : case_statement SEMICOLON
+          | case_statement SEMICOLON case_list
+
+declaration : datadef 
+            | funcdef
+
+function_type : type_constr_app ARROW function_type
+              | type_constr_app
+
+type_constr_app : type_constr_app type_atom
+                | type_atom
+
+type_atom : identifier
+          | LPAREN type RPAREN
+
+type : function_type
+
+datadef : DATA typename EQUAL typesum
+
+typename : ID_UPPER
+         | ID_UPPER lower_identifier_list
+
+constrdef : ID_UPPER
+          | ID_UPPER type_list
+
+funcdef : functype SEMICOLON funcbody
+
+functype : prefix_name DOUBLE_COLON type
+
+funcbody : func_sig EQUAL expr
+
+func_sig : prefix_def
+         | infix_def
+
+prefix_def : prefix_name
+           | prefix_def ID_LOWER
+
+infix_def : ID_LOWER infix_name ID_LOWER
+
+prefix_name : ID_LOWER
+            | LPAREN infix_operator RPAREN
+
+infix_name : infix_operator
+
+expr : infix_operation
+     | case
+
+infix_operation : precedence_9
+
+precedence_neg1 : func_call
+
+func_call : atom
+          | func_call atom
+
+
+case : CASE expr OF LBRACE case_list RBRACE
+
+case_statement : pattern_match ARROW expr
+
+pattern_match : ID_UPPER
+              | pattern_match ID_LOWER
+
+atom : literal
+     | identifier
+     | LPAREN expr RPAREN
+
+identifier : ID_UPPER 
+           | ID_LOWER
+
+literal : STRING
+        | NUMBER
+        | CHAR
+
+
+% Haskell has 10 levels of infix operators. let's implement that!
+infix_operation: precedence_9
+
+precedence_9: precedence_9_l
+            | precedence_9_i
+            | precedence_9_r
+            | precedence_8
+precedence_9_l: precedence_8 INFIX_8_L precedence_8
+              | precedence_9_l INFIX_8_L precedence_8
+precedence_9_i: precedence_8 INFIX_8_I precedence_8
+precedence_9_r: precedence_8 INFIX_8_R precedence_8
+              | precedence_8 INFIX_8_R precedence_9_r
+
+precedence_8: precedence_8_l
+            | precedence_8_i
+            | precedence_8_r
+            | precedence_7
+precedence_8_l: precedence_7 INFIX_7_L precedence_7
+              | precedence_8_l INFIX_7_L precedence_7
+precedence_8_i: precedence_7 INFIX_7_I precedence_7
+precedence_8_r: precedence_7 INFIX_7_R precedence_7
+              | precedence_7 INFIX_7_R precedence_8_r
+
+precedence_7: precedence_7_l
+            | precedence_7_i
+            | precedence_7_r
+           | precedence_6
+precedence_7_l: precedence_6 INFIX_6_L precedence_6
+              | precedence_7_l INFIX_6_L precedence_6
+precedence_7_i: precedence_6 INFIX_6_I precedence_6
+precedence_7_r: precedence_6 INFIX_6_R precedence_6
+              | precedence_6 INFIX_6_R precedence_7_r
+
+precedence_6: precedence_6_l
+            | precedence_6_i
+            | precedence_6_r
+           | precedence_5
+precedence_6_l: precedence_5 INFIX_5_L precedence_5
+              | precedence_6_l INFIX_5_L precedence_5
+precedence_6_i: precedence_5 INFIX_5_I precedence_5
+precedence_6_r: precedence_5 INFIX_5_R precedence_5
+              | precedence_5 INFIX_5_R precedence_6_r
+
+precedence_5: precedence_5_l
+            | precedence_5_i
+            | precedence_5_r
+           | precedence_4
+precedence_5_l: precedence_4 INFIX_4_L precedence_4
+              | precedence_5_l INFIX_4_L precedence_4
+precedence_5_i: precedence_4 INFIX_4_I precedence_4
+precedence_5_r: precedence_4 INFIX_4_R precedence_4
+              | precedence_4 INFIX_4_R precedence_5_r
+
+precedence_4: precedence_4_l
+            | precedence_4_i
+            | precedence_4_r
+           | precedence_3
+precedence_4_l: precedence_3 INFIX_3_L precedence_3
+              | precedence_4_l INFIX_3_L precedence_3
+precedence_4_i: precedence_3 INFIX_3_I precedence_3
+precedence_4_r: precedence_3 INFIX_3_R precedence_3
+              | precedence_3 INFIX_3_R precedence_4_r
+
+precedence_3: precedence_3_l
+            | precedence_3_i
+            | precedence_3_r
+           | precedence_2
+precedence_3_l: precedence_2 INFIX_2_L precedence_2
+              | precedence_3_l INFIX_2_L precedence_2
+precedence_3_i: precedence_2 INFIX_2_I precedence_2
+precedence_3_r: precedence_2 INFIX_2_R precedence_2
+              | precedence_2 INFIX_2_R precedence_3_r
+
+precedence_2: precedence_2_l
+            | precedence_2_i
+            | precedence_2_r
+           | precedence_1
+precedence_2_l: precedence_1 INFIX_1_L precedence_1
+              | precedence_2_l INFIX_1_L precedence_1
+precedence_2_i: precedence_1 INFIX_1_I precedence_1
+precedence_2_r: precedence_1 INFIX_1_R precedence_1
+              | precedence_1 INFIX_1_R precedence_2_r
+
+precedence_1: precedence_1_l
+            | precedence_1_i
+            | precedence_1_r
+           | precedence_0
+precedence_1_l: precedence_0 INFIX_0_L precedence_0
+              | precedence_1_l INFIX_0_L precedence_0
+precedence_1_i: precedence_0 INFIX_0_I precedence_0
+precedence_1_r: precedence_0 INFIX_0_R precedence_0
+              | precedence_0 INFIX_0_R precedence_1_r
+
+precedence_0: precedence_0_l
+            | precedence_0_i
+            | precedence_0_r
+           | precedence_neg1
+precedence_0_l: precedence_neg1 INFIX_0_L precedence_neg1
+              | precedence_0_l INFIX_0_L precedence_neg1
+precedence_0_i: precedence_neg1 INFIX_0_I precedence_neg1
+precedence_0_r: precedence_neg1 INFIX_0_R precedence_neg1
+              | precedence_neg1 INFIX_0_R precedence_0_r
+
+precedence_neg1: func_call
+
+INFIX_operator: INFIX_0_L | INFIX_0_I| INFIX_0_R
+              | INFIX_1_L | INFIX_1_I| INFIX_1_R
+              | INFIX_2_L | INFIX_2_I| INFIX_2_R
+              | INFIX_3_L | INFIX_3_I| INFIX_3_R
+              | INFIX_4_L | INFIX_4_I| INFIX_4_R
+              | INFIX_5_L | INFIX_5_I| INFIX_5_R
+              | INFIX_6_L | INFIX_6_I| INFIX_6_R
+              | INFIX_7_L | INFIX_7_I| INFIX_7_R
+              | INFIX_8_L | INFIX_8_I| INFIX_8_R
+              | INFIX_9_L | INFIX_9_I| INFIX_9_R
+
+

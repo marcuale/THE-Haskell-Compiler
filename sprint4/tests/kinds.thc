@@ -1,0 +1,13 @@
+-- Expected: 9
+
+data List a = Empty | Node a (List a);
+
+main :: Int;
+main = head (id (Node 9 Empty));
+
+head a = case a of {
+    Node a _ -> a;
+};
+
+id :: m a -> m a;
+id x = x;

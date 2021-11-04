@@ -1,0 +1,2 @@
+data List a = Empty | Node a (List a);
+data Maybe a = Just a | Nothing;

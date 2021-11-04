@@ -1,0 +1,55 @@
+- constr:
+    args:
+    - name: a
+      node: variable
+    constructor:
+      name: List
+      node: type_constr
+    node: type
+  constructors:
+  - args:
+    - args:
+      - args: []
+        constructor:
+          name: a
+          node: type_constr
+        node: type
+      constructor:
+        name: List
+        node: type_constr
+      node: type
+    - name: a
+      node: type_constr
+    constructor:
+      id: Node
+      node: constructor
+    node: constrdef
+  - args: []
+    constructor:
+      id: Empty
+      node: constructor
+    node: constrdef
+  node: data
+- constr:
+    args:
+    - name: a
+      node: variable
+    constructor:
+      name: Maybe
+      node: type_constr
+    node: type
+  constructors:
+  - args: []
+    constructor:
+      id: Nothing
+      node: constructor
+    node: constrdef
+  - args:
+    - name: a
+      node: type_constr
+    constructor:
+      id: Just
+      node: constructor
+    node: constrdef
+  node: data
+None

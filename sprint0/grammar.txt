@@ -1,0 +1,221 @@
+Everything stated under the "#Lexer classes" heading is a lexer class.
+Everything else is a parser class
+
+
+program: declaration_list
+declaration_list: declaration ";”
+                , declaration ";" declaration_list
+declaration: typedef
+           , funcdef
+
+typedef: "data" typename "=" typesum
+
+typename: capitalized_identifier_list type_params
+type_params: ε
+           , type_params "|" lowercase_identifier 
+
+typesum: constr
+       , typesum "|" constr
+constr: capitalized_identifier typelist
+typelist: ε
+        , typelist type
+
+type: function_type
+function_type: type_constr_app
+             , type_constr_app "->" function_type
+type_constr_app: type_atom
+               , type_constr_app type_atom
+type_atom: capitalized_identifier
+        , lowercase_identifier
+        , "(" type ")"
+
+funcdef: functype ";" func_body
+functype: funcname "::" type
+func_body: func_sig "=" expr
+
+funcname: prefix_name
+
+func_sig: prefix_def
+        , infix_def
+prefix_def: prefix_name
+          , prefix_def lowercase_identifier
+infix_def: lowercase_identifier infix_name lowercase_identifier
+prefix_name: lowercase_identifier
+           , "(" infix_operator ")"
+infix_name: infix_operator
+          , "`" lowercase_identifier "`"
+
+expr: case
+    , func_call
+    , infix_operation
+`
+case: "case" expr "of" "{" case_list "}"
+case_list: case_statement ";"
+         , case_statement ";" case_list
+case_statement: deref_type_constructor "->" expr
+deref_type_constructor: capitalized_identifier
+                      , deref_type_constructor lowercase_identifier
+func_call: atom
+        , func_call atom
+
+atom: literal
+    , lowercase_identifier
+    , capitalized_identifier
+    , "(" expr ")"
+
+% Haskell has 10 levels of infix operators. let's implement that!
+infix_operation: precedence_9
+
+precedence_9: precedence_9_l
+            , precedence_9_i
+            , precedence_9_r
+            , precedence_8
+precedence_9_l: precedence_8 infix_8_l precedence_8
+              , precedence_9_l infix_8_l precedence_8
+precedence_9_i: precedence_8 infix_8_i precedence_8
+precedence_9_r: precedence_8 infix_8_r precedence_8
+              , precedence_8 infix_8_r precedence_9_r
+
+precedence_8: precedence_8_l
+            , precedence_8_i
+            , precedence_8_r
+            , precedence_7
+precedence_8_l: precedence_7 infix_7_l precedence_7
+              , precedence_8_l infix_7_l precedence_7
+precedence_8_i: precedence_7 infix_7_i precedence_7
+precedence_8_r: precedence_7 infix_7_r precedence_7
+              , precedence_7 infix_7_r precedence_8_r
+
+precedence_7: precedence_7_l
+            , precedence_7_i
+            , precedence_7_r
+           , precedence_6
+precedence_7_l: precedence_6 infix_6_l precedence_6
+              , precedence_7_l infix_6_l precedence_6
+precedence_7_i: precedence_6 infix_6_i precedence_6
+precedence_7_r: precedence_6 infix_6_r precedence_6
+              , precedence_6 infix_6_r precedence_7_r
+
+precedence_6: precedence_6_l
+            , precedence_6_i
+            , precedence_6_r
+           , precedence_5
+precedence_6_l: precedence_5 infix_5_l precedence_5
+              , precedence_6_l infix_5_l precedence_5
+precedence_6_i: precedence_5 infix_5_i precedence_5
+precedence_6_r: precedence_5 infix_5_r precedence_5
+              , precedence_5 infix_5_r precedence_6_r
+
+precedence_5: precedence_5_l
+            , precedence_5_i
+            , precedence_5_r
+           , precedence_4
+precedence_5_l: precedence_4 infix_4_l precedence_4
+              , precedence_5_l infix_4_l precedence_4
+precedence_5_i: precedence_4 infix_4_i precedence_4
+precedence_5_r: precedence_4 infix_4_r precedence_4
+              , precedence_4 infix_4_r precedence_5_r
+
+precedence_4: precedence_4_l
+            , precedence_4_i
+            , precedence_4_r
+           , precedence_3
+precedence_4_l: precedence_3 infix_3_l precedence_3
+              , precedence_4_l infix_3_l precedence_3
+precedence_4_i: precedence_3 infix_3_i precedence_3
+precedence_4_r: precedence_3 infix_3_r precedence_3
+              , precedence_3 infix_3_r precedence_4_r
+
+precedence_3: precedence_3_l
+            , precedence_3_i
+            , precedence_3_r
+           , precedence_2
+precedence_3_l: precedence_2 infix_2_l precedence_2
+              , precedence_3_l infix_2_l precedence_2
+precedence_3_i: precedence_2 infix_2_i precedence_2
+precedence_3_r: precedence_2 infix_2_r precedence_2
+              , precedence_2 infix_2_r precedence_3_r
+
+precedence_2: precedence_2_l
+            , precedence_2_i
+            , precedence_2_r
+           , precedence_1
+precedence_2_l: precedence_1 infix_1_l precedence_1
+              , precedence_2_l infix_1_l precedence_1
+precedence_2_i: precedence_1 infix_1_i precedence_1
+precedence_2_r: precedence_1 infix_1_r precedence_1
+              , precedence_1 infix_1_r precedence_2_r
+
+precedence_1: precedence_1_l
+            , precedence_1_i
+            , precedence_1_r
+           , precedence_0
+precedence_1_l: precedence_0 infix_0_l precedence_0
+              , precedence_1_l infix_0_l precedence_0
+precedence_1_i: precedence_0 infix_0_i precedence_0
+precedence_1_r: precedence_0 infix_0_r precedence_0
+              , precedence_0 infix_0_r precedence_1_r
+
+precedence_0: precedence_0_l
+            , precedence_0_i
+            , precedence_0_r
+           , precedence_neg1
+precedence_0_l: precedence_neg1 infix_0_l precedence_neg1
+              , precedence_0_l infix_0_l precedence_neg1
+precedence_0_i: precedence_neg1 infix_0_i precedence_neg1
+precedence_0_r: precedence_neg1 infix_0_r precedence_neg1
+              , precedence_neg1 infix_0_r precedence_0_r
+
+precedence_neg1: func_call
+
+infix_operator: infix_0_l , infix_0_i, infix_0_r
+              , infix_1_l , infix_1_i, infix_1_r
+              , infix_2_l , infix_2_i, infix_2_r
+              , infix_3_l , infix_3_i, infix_3_r
+              , infix_4_l , infix_4_i, infix_4_r
+              , infix_5_l , infix_5_i, infix_5_r
+              , infix_6_l , infix_6_i, infix_6_r
+              , infix_7_l , infix_7_i, infix_7_r
+              , infix_8_l , infix_8_i, infix_8_r
+              , infix_9_l , infix_9_i, infix_9_r
+
+
+
+#Lexer classes
+capitalized_identifier: [A-Z]\S*
+lowercase_identifier: [a-z_]\S*
+integer_literal: [1-9][0-9]*
+
+% These will probably be generated by a preprocessor
+infix_0_l: 
+infix_0_i:
+infix_0_r:
+infix_1_l: 
+infix_1_i:
+infix_1_r:
+infix_2_l: 
+infix_2_i:
+infix_2_r:
+infix_3_l: 
+infix_3_i:
+infix_3_r:
+infix_4_l: 
+infix_4_i:
+infix_4_r:
+infix_5_l: 
+infix_5_i:
+infix_5_r:
+infix_6_l: \+ | \-
+infix_6_i:
+infix_6_r:
+infix_7_l: \* | /
+infix_7_i:
+infix_7_r:
+infix_8_l: 
+infix_8_i:
+infix_8_r:
+infix_9_r:
+infix_9_i: 
+% left associative level 9 is the default, prioritize other lexer classes
+% before this
+infix_9_l: [!\#\$\%\&\⋆\+\.\/\<\=\>\?\@\\\^\-\~\]+

@@ -1,0 +1,32 @@
+data List a = Empty | Node a (List a);
+
+inflist :: Int -> List Int;
+inflist a = Node a (inflist (a+1));
+
+head :: List a -> a;
+head a = case a of {
+    Node a _ -> a;
+};
+
+tail :: List a -> List a;
+tail a = case a of {
+    Node _ a -> a;
+};
+
+zipWith :: (a -> b -> c) -> List a -> List b -> List c;
+zipWith f la lb = case la of {
+    Empty -> Empty;
+    Node a as -> case lb of {
+        Empty -> Empty;
+        Node b bs -> Node (f a b) (zipWith f as bs);
+    };
+};
+
+add :: Int -> Int -> Int;
+add x y = x + y;
+
+fibs :: List Int;
+fibs = Node 0 (Node 1 (zipWith add fibs (tail fibs)));
+
+main :: Int;
+main = head (tail (tail (tail (tail (tail fibs)))));
