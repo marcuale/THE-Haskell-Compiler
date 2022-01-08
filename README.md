@@ -1,7 +1,5 @@
 # THE-Haskell-Compiler
 
-CSC488 Compiler Project for Winter 2021. 
-
 Compiles a (small) subset of Haskell into standard C. Driven by Python Lex-Yacc (PLY).
 Intermediate code representation is C code, which gets directly compiled.
 
